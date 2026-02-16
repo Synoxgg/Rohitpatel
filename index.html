@@ -6,20 +6,24 @@
     <title>Sorry Paaji</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS Styles --- */
+        /* --- General Styles --- */
         body {
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
             font-family: 'Poppins', sans-serif;
             color: #4a4a4a;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden; /* No scrolling, only steps */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
 
-        /* Floating Hearts Animation */
+        /* Floating Hearts Background */
         .heart-bg {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -31,7 +35,7 @@
         .heart {
             position: absolute;
             bottom: -100px;
-            background-color: rgba(255, 107, 107, 0.5);
+            background-color: rgba(255, 107, 107, 0.4);
             width: 20px;
             height: 20px;
             transform: rotate(45deg);
@@ -50,113 +54,105 @@
 
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(45deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(45deg); opacity: 0; }
         }
 
-        /* Container */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: #d63384;
-            margin-bottom: 10px;
-        }
-
-        /* Music Button */
-        .music-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border: 2px solid #d63384;
-            border-radius: 50px;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            color: #d63384;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-
-        /* Sections */
-        .card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
+        /* Main Card Container */
+        .card-container {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            min-height: 500px; /* Fixed height for consistency */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        .card:hover { transform: translateY(-5px); }
 
-        /* Reason Generator */
-        .reason-btn {
+        /* Steps Logic */
+        .step {
+            display: none; /* Hide all steps by default */
+            width: 100%;
+            animation: fadeIn 0.8s ease;
+        }
+        .step.active {
+            display: block; /* Show only active step */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1, h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #d63384;
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        p { font-size: 1rem; line-height: 1.5; }
+
+        /* Buttons */
+        .btn {
             background: #ff6b6b;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
+            margin-top: 20px;
             transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
         }
-        .reason-btn:hover { background: #ff4757; transform: scale(1.05); }
-        #reason-display {
-            margin-top: 15px;
-            font-style: italic;
+        .btn:hover { background: #ff4757; transform: scale(1.05); }
+        
+        .music-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
             color: #d63384;
-            font-weight: 600;
-            min-height: 20px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid #d63384;
+            cursor: pointer;
+            z-index: 100;
         }
 
-        /* Letter Section */
+        /* Specific Elements */
         #typing-text {
             text-align: left;
-            font-size: 1rem;
-            line-height: 1.6;
-            white-space: pre-wrap; /* Keeps formatting */
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            min-height: 200px;
+            margin-bottom: 10px;
         }
-        .cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.2em;
-            background-color: #333;
-            animation: blink 0.7s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* Memories Section */
+        
         .memory-img {
             width: 100%;
-            max-width: 300px;
-            /* 9:16 Aspect Ratio Styles */
-            aspect-ratio: 9/16; 
-            object-fit: cover;
-            border-radius: 15px;
-            border: 5px solid white;
+            border-radius: 10px;
+            border: 3px solid white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            margin-top: 15px;
+            margin-bottom: 15px;
+            /* Force 9:16 approx aspect ratio in display */
+            aspect-ratio: 9/16; 
+            object-fit: cover; 
         }
 
-        /* Secret Message */
         .blur-text {
-            filter: blur(5px);
-            user-select: none;
-            transition: filter 0.5s ease;
+            filter: blur(8px);
             cursor: pointer;
             background: #ffe0e0;
-            padding: 10px;
+            padding: 15px;
             border-radius: 10px;
+            transition: 0.5s;
         }
         .revealed {
             filter: blur(0);
@@ -164,146 +160,153 @@
             color: #155724;
         }
 
-        /* Footer */
-        footer {
-            margin-top: 50px;
-            font-size: 0.9rem;
-            color: #888;
-            padding-bottom: 20px;
-        }
-
-        /* Floating elements animation logic handled in JS */
     </style>
 </head>
 <body>
 
+    <button class="music-btn" onclick="toggleMusic()">🎵 Play Music</button>
     <audio id="bg-music" loop>
         <source src="music.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
     </audio>
-
-    <button class="music-btn" onclick="toggleMusic()">🎵 Music OFF</button>
 
     <div class="heart-bg" id="heart-container"></div>
 
-    <div class="container">
-        
-        <h1>I'm Sorry! 🌹</h1>
-        <p>Ek choti si koshish...</p>
+    <div class="card-container">
 
-        <div class="card">
-            <h3>Why I'm Sorry?</h3>
-            <button class="reason-btn" onclick="showReason()">Click Me</button>
-            <p id="reason-display"></p>
+        <div class="step active" id="step-1">
+            <h1>Hey Paaji!</h1>
+            <p>Ek choti si baat karni thi...</p>
+            <p>Thoda time doge?</p>
+            <button class="btn" onclick="nextStep(2)">Haan, bolo</button>
         </div>
 
-        <div class="card">
-            <h3>💌 A Letter for You</h3>
-            <div id="typing-text"></div><span class="cursor"></span>
+        <div class="step" id="step-2">
+            <h2>Why I'm Sorry? 🤦‍♂️</h2>
+            <p>Button dabao, sachayi saamne aayegi.</p>
+            <button class="btn" id="reason-btn" onclick="generateReason()">Reason Jan'na Hai?</button>
+            <p id="reason-text" style="margin-top: 15px; font-weight: bold; color: #d63384; display: none;"></p>
+            <button class="btn" id="next-btn-2" style="display: none;" onclick="nextStep(3)">Aage badho ></button>
         </div>
 
-        <div class="card">
-            <h3>📸 Memories</h3>
-            <p>Aab isko maaf krdo please, isko dekho kitna bhole maan se dekh rha h...</p>
-            <img src="rohit.jpg" alt="Rohit asking for forgiveness" class="memory-img" onerror="this.src='https://placehold.co/300x533/pink/white?text=Put+rohit.jpg+Here'">
+        <div class="step" id="step-3">
+            <h2>💌 Dil ki Baat</h2>
+            <div id="typing-text"></div>
+            <button class="btn" onclick="nextStep(4)">Next ></button>
         </div>
 
-        <div class="card" style="border: 2px dashed #d63384;">
-            <h3>🧠 My Promise</h3>
-            <p style="font-size: 1.1rem; font-weight: bold;">
+        <div class="step" id="step-4">
+            <h2>Memories 📸</h2>
+            <img src="rohit.jpg" class="memory-img" alt="Rohit" onerror="this.src='https://placehold.co/300x533/pink/white?text=Image+Missing'">
+            <p>Ab isko maaf krdo please, isko dekho kitna bhole maan se dekh rha h...</p>
+            <button class="btn" onclick="nextStep(5)">Chalo maaf kiya?</button>
+        </div>
+
+        <div class="step" id="step-5">
+            <h2>My Promise ✋</h2>
+            <p style="font-size: 1.2rem; font-weight: bold; color: #d63384; margin: 40px 0;">
                 "Please maaf krdo yeah promise h mera aab. Nhi hogi misunderstanding."
             </p>
+            <button class="btn" onclick="nextStep(6)">Last Surprise ></button>
         </div>
 
-        <div class="card">
-            <h3>🔐 Secret Message</h3>
+        <div class="step" id="step-6">
+            <h2>🔐 Secret Message</h2>
             <p>Tap below to unlock...</p>
             <div class="blur-text" id="secret-msg" onclick="unlockSecret()">
                 CLICK TO REVEAL
             </div>
+            <br>
+            <p style="font-size: 0.8rem; color: #888; margin-top: 20px;">Ending Note: Ek chance de do please.</p>
         </div>
 
-        <footer>
-            Made with ❤️ and regret.
-        </footer>
     </div>
 
     <script>
-        /* --- JavaScript Logic --- */
-
-        // 1. Music Toggle
+        // Music Logic
         const music = document.getElementById('bg-music');
-        const musicBtn = document.querySelector('.music-btn');
         let isPlaying = false;
-
         function toggleMusic() {
             if (isPlaying) {
                 music.pause();
-                musicBtn.innerText = "🎵 Music OFF";
-                isPlaying = false;
+                document.querySelector('.music-btn').innerText = "🎵 Play Music";
             } else {
                 music.play();
-                musicBtn.innerText = "🔊 Music ON";
-                isPlaying = true;
+                document.querySelector('.music-btn').innerText = "⏸ Pause Music";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Navigation Logic
+        function nextStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show requested step
+            const currentStep = document.getElementById('step-' + stepNumber);
+            currentStep.classList.add('active');
+
+            // Trigger animations based on step
+            if (stepNumber === 3) {
+                startTyping();
             }
         }
 
-        // 2. Reason Generator
-        function showReason() {
-            const reasonText = "Meri akal late aayi sacchi aur aab hua toh sar kaat dena!";
-            document.getElementById('reason-display').innerText = reasonText;
+        // Step 2: Generate Reason
+        function generateReason() {
+            const text = document.getElementById('reason-text');
+            const btn = document.getElementById('reason-btn');
+            const nextBtn = document.getElementById('next-btn-2');
+
+            text.innerText = "Meri akal late aayi sacchi aur aab hua toh sar kaat dena! 🤕";
+            text.style.display = "block";
+            btn.style.display = "none";
+            nextBtn.style.display = "inline-block";
         }
 
-        // 3. Typing Animation
-        const message = `Mana meri glti thi kahi kahi aur main mtlb jaisa krna chah rha lekin yeah aur ulta hogya.\n\nPlease apni dosti strong h aur aisa fir kabhi hua toh tum mera muu tod ke htth main de dena prati strong dosti h aur hrr usme mtlb apna jo tha lambe time main aata h bane rehna hota h shuru shuru m sahi chlta h fir problem wagera lekin apn dono ko pta tha aise din aayenge paaji dil se sorry.\n\n"Ek chance de do please."`;
+        // Step 3: Typing Animation
+        let typingStarted = false;
+        function startTyping() {
+            if(typingStarted) return;
+            typingStarted = true;
 
-        const typingElement = document.getElementById('typing-text');
-        let index = 0;
+            const message = `Mana meri glti thi kahi kahi aur main mtlb jaisa krna chah rha lekin yeah aur ulta hogya.\n\nPlease apni dosti strong h aur aisa fir kabhi hua toh tum mera muu tod ke htth main de dena prati strong dosti h aur hrr usme mtlb apna jo tha lambe time main aata h bane rehna hota h shuru shuru m sahi chlta h fir problem wagera lekin apn dono ko pta tha aise din aayenge paaji dil se sorry.`;
+            const element = document.getElementById('typing-text');
+            let i = 0;
 
-        function typeWriter() {
-            if (index < message.length) {
-                typingElement.innerHTML += message.charAt(index) === '\n' ? '<br>' : message.charAt(index);
-                index++;
-                setTimeout(typeWriter, 50); // Speed of typing
-            } else {
-                document.querySelector('.cursor').style.display = 'none';
+            function type() {
+                if (i < message.length) {
+                    element.innerHTML += message.charAt(i) === '\n' ? '<br>' : message.charAt(i);
+                    i++;
+                    setTimeout(type, 30);
+                }
             }
+            type();
         }
 
-        // Start typing when the page loads (or you can delay it)
-        window.onload = function() {
-            setTimeout(typeWriter, 1000);
-            createHearts();
-        };
-
-        // 4. Secret Message Unlock
+        // Step 6: Unlock Secret
         function unlockSecret() {
             const secretDiv = document.getElementById('secret-msg');
             if (!secretDiv.classList.contains('revealed')) {
-                secretDiv.innerText = "Kuttiya 😂\n\nTumne maaf krdiya toh thankyou paaji aur shukriya ❤️";
+                secretDiv.innerText = "Madam 🫶🏻\n\nTumne maaf krdiya toh thankyou paaji aur shukriya ❤️";
                 secretDiv.classList.add('revealed');
             }
         }
 
-        // 5. Floating Hearts Background Generator
+        // Background Hearts
         function createHearts() {
             const container = document.getElementById('heart-container');
-            const heartCount = 20; // Number of hearts
-
-            for (let i = 0; i < heartCount; i++) {
+            for (let i = 0; i < 15; i++) {
                 const heart = document.createElement('div');
                 heart.classList.add('heart');
-                
-                // Randomize position and animation duration
                 heart.style.left = Math.random() * 100 + "vw";
-                heart.style.animationDuration = Math.random() * 3 + 7 + "s"; // between 7s and 10s
+                heart.style.animationDuration = Math.random() * 3 + 5 + "s";
                 heart.style.opacity = Math.random();
-                heart.style.width = Math.random() * 20 + 10 + "px"; // Size variation
-                heart.style.height = heart.style.width;
-
                 container.appendChild(heart);
             }
         }
+        createHearts();
     </script>
 </body>
 </html>
