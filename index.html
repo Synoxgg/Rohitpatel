@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorry Paaji</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Styles --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #4a4a4a;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        /* Floating Hearts Animation */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .heart {
+            position: absolute;
+            bottom: -100px;
+            background-color: rgba(255, 107, 107, 0.5);
+            width: 20px;
+            height: 20px;
+            transform: rotate(45deg);
+            animation: floatUp 10s linear infinite;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: inherit;
+            border-radius: 50%;
+        }
+        .heart::before { top: -10px; left: 0; }
+        .heart::after { top: 0; left: -10px; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(45deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+        }
+
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #d63384;
+            margin-bottom: 10px;
+        }
+
+        /* Music Button */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #d63384;
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #d63384;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        /* Sections */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover { transform: translateY(-5px); }
+
+        /* Reason Generator */
+        .reason-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        .reason-btn:hover { background: #ff4757; transform: scale(1.05); }
+        #reason-display {
+            margin-top: 15px;
+            font-style: italic;
+            color: #d63384;
+            font-weight: 600;
+            min-height: 20px;
+        }
+
+        /* Letter Section */
+        #typing-text {
+            text-align: left;
+            font-size: 1rem;
+            line-height: 1.6;
+            white-space: pre-wrap; /* Keeps formatting */
+        }
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #333;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Memories Section */
+        .memory-img {
+            width: 100%;
+            max-width: 300px;
+            /* 9:16 Aspect Ratio Styles */
+            aspect-ratio: 9/16; 
+            object-fit: cover;
+            border-radius: 15px;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-top: 15px;
+        }
+
+        /* Secret Message */
+        .blur-text {
+            filter: blur(5px);
+            user-select: none;
+            transition: filter 0.5s ease;
+            cursor: pointer;
+            background: #ffe0e0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .revealed {
+            filter: blur(0);
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #888;
+            padding-bottom: 20px;
+        }
+
+        /* Floating elements animation logic handled in JS */
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <button class="music-btn" onclick="toggleMusic()">🎵 Music OFF</button>
+
+    <div class="heart-bg" id="heart-container"></div>
+
+    <div class="container">
+        
+        <h1>I'm Sorry! 🌹</h1>
+        <p>Ek choti si koshish...</p>
+
+        <div class="card">
+            <h3>Why I'm Sorry?</h3>
+            <button class="reason-btn" onclick="showReason()">Click Me</button>
+            <p id="reason-display"></p>
+        </div>
+
+        <div class="card">
+            <h3>💌 A Letter for You</h3>
+            <div id="typing-text"></div><span class="cursor"></span>
+        </div>
+
+        <div class="card">
+            <h3>📸 Memories</h3>
+            <p>Aab isko maaf krdo please, isko dekho kitna bhole maan se dekh rha h...</p>
+            <img src="rohit.jpg" alt="Rohit asking for forgiveness" class="memory-img" onerror="this.src='https://placehold.co/300x533/pink/white?text=Put+rohit.jpg+Here'">
+        </div>
+
+        <div class="card" style="border: 2px dashed #d63384;">
+            <h3>🧠 My Promise</h3>
+            <p style="font-size: 1.1rem; font-weight: bold;">
+                "Please maaf krdo yeah promise h mera aab. Nhi hogi misunderstanding."
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>🔐 Secret Message</h3>
+            <p>Tap below to unlock...</p>
+            <div class="blur-text" id="secret-msg" onclick="unlockSecret()">
+                CLICK TO REVEAL
+            </div>
+        </div>
+
+        <footer>
+            Made with ❤️ and regret.
+        </footer>
+    </div>
+
+    <script>
+        /* --- JavaScript Logic --- */
+
+        // 1. Music Toggle
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.querySelector('.music-btn');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerText = "🎵 Music OFF";
+                isPlaying = false;
+            } else {
+                music.play();
+                musicBtn.innerText = "🔊 Music ON";
+                isPlaying = true;
+            }
+        }
+
+        // 2. Reason Generator
+        function showReason() {
+            const reasonText = "Meri akal late aayi sacchi aur aab hua toh sar kaat dena!";
+            document.getElementById('reason-display').innerText = reasonText;
+        }
+
+        // 3. Typing Animation
+        const message = `Mana meri glti thi kahi kahi aur main mtlb jaisa krna chah rha lekin yeah aur ulta hogya.\n\nPlease apni dosti strong h aur aisa fir kabhi hua toh tum mera muu tod ke htth main de dena prati strong dosti h aur hrr usme mtlb apna jo tha lambe time main aata h bane rehna hota h shuru shuru m sahi chlta h fir problem wagera lekin apn dono ko pta tha aise din aayenge paaji dil se sorry.\n\n"Ek chance de do please."`;
+
+        const typingElement = document.getElementById('typing-text');
+        let index = 0;
+
+        function typeWriter() {
+            if (index < message.length) {
+                typingElement.innerHTML += message.charAt(index) === '\n' ? '<br>' : message.charAt(index);
+                index++;
+                setTimeout(typeWriter, 50); // Speed of typing
+            } else {
+                document.querySelector('.cursor').style.display = 'none';
+            }
+        }
+
+        // Start typing when the page loads (or you can delay it)
+        window.onload = function() {
+            setTimeout(typeWriter, 1000);
+            createHearts();
+        };
+
+        // 4. Secret Message Unlock
+        function unlockSecret() {
+            const secretDiv = document.getElementById('secret-msg');
+            if (!secretDiv.classList.contains('revealed')) {
+                secretDiv.innerText = "Kuttiya 😂\n\nTumne maaf krdiya toh thankyou paaji aur shukriya ❤️";
+                secretDiv.classList.add('revealed');
+            }
+        }
+
+        // 5. Floating Hearts Background Generator
+        function createHearts() {
+            const container = document.getElementById('heart-container');
+            const heartCount = 20; // Number of hearts
+
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                // Randomize position and animation duration
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = Math.random() * 3 + 7 + "s"; // between 7s and 10s
+                heart.style.opacity = Math.random();
+                heart.style.width = Math.random() * 20 + 10 + "px"; // Size variation
+                heart.style.height = heart.style.width;
+
+                container.appendChild(heart);
+            }
+        }
+    </script>
+</body>
+</html>
