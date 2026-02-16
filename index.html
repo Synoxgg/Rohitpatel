@@ -14,7 +14,7 @@
             font-family: 'Poppins', sans-serif;
             color: #4a4a4a;
             height: 100vh;
-            overflow: hidden; /* No scrolling, only steps */
+            overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -41,17 +41,7 @@
             transform: rotate(45deg);
             animation: floatUp 10s linear infinite;
         }
-        .heart::before, .heart::after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: inherit;
-            border-radius: 50%;
-        }
-        .heart::before { top: -10px; left: 0; }
-        .heart::after { top: 0; left: -10px; }
-
+        
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(45deg); opacity: 0; }
             50% { opacity: 0.8; }
@@ -62,12 +52,14 @@
         .card-container {
             width: 90%;
             max-width: 400px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95); /* Thoda aur solid banaya taaki clear dikhe */
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             position: relative;
-            min-height: 500px; /* Fixed height for consistency */
+            /* Mobile pe agar content lamba ho toh scroll aa jaye, button na kate */
+            max-height: 90vh; 
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -76,16 +68,16 @@
 
         /* Steps Logic */
         .step {
-            display: none; /* Hide all steps by default */
+            display: none; 
             width: 100%;
-            animation: fadeIn 0.8s ease;
+            animation: fadeIn 0.5s ease;
         }
         .step.active {
-            display: block; /* Show only active step */
+            display: block;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -94,24 +86,28 @@
             font-family: 'Dancing Script', cursive;
             color: #d63384;
         }
-        h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        p { font-size: 1rem; line-height: 1.5; }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        h2 { font-size: 1.8rem; margin-bottom: 15px; }
+        p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 15px; }
 
         /* Buttons */
         .btn {
             background: #ff6b6b;
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 12px 30px; /* Thoda bada button */
             font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 15px;
+            margin-bottom: 10px;
             transition: 0.3s;
             box-shadow: 0 4px 10px rgba(255, 107, 107, 0.4);
+            font-weight: 600;
         }
         .btn:hover { background: #ff4757; transform: scale(1.05); }
         
+        /* Music Button */
         .music-btn {
             position: absolute;
             top: 20px;
@@ -126,38 +122,44 @@
             z-index: 100;
         }
 
-        /* Specific Elements */
-        #typing-text {
-            text-align: left;
-            font-size: 0.95rem;
-            white-space: pre-wrap;
-            min-height: 200px;
-            margin-bottom: 10px;
-        }
-        
+        /* Images */
         .memory-img {
             width: 100%;
             border-radius: 10px;
             border: 3px solid white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             margin-bottom: 15px;
-            /* Force 9:16 approx aspect ratio in display */
-            aspect-ratio: 9/16; 
+            /* Aspect Ratio fix */
+            max-height: 400px;
             object-fit: cover; 
         }
 
+        /* Secret Message Styling */
         .blur-text {
             filter: blur(8px);
             cursor: pointer;
             background: #ffe0e0;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             transition: 0.5s;
+            font-weight: bold;
+            color: #d63384;
         }
         .revealed {
             filter: blur(0);
             background: #d4edda;
             color: #155724;
+        }
+
+        /* Typing Text Area */
+        #typing-text {
+            text-align: left;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            min-height: 150px;
+            background: #fff0f5;
+            padding: 10px;
+            border-radius: 10px;
         }
 
     </style>
@@ -184,7 +186,8 @@
             <h2>Why I'm Sorry? 🤦‍♂️</h2>
             <p>Button dabao, sachayi saamne aayegi.</p>
             <button class="btn" id="reason-btn" onclick="generateReason()">Reason Jan'na Hai?</button>
-            <p id="reason-text" style="margin-top: 15px; font-weight: bold; color: #d63384; display: none;"></p>
+            <p id="reason-text" style="display: none; font-weight: bold; color: #d63384; margin-top:10px;"></p>
+            <br>
             <button class="btn" id="next-btn-2" style="display: none;" onclick="nextStep(3)">Aage badho ></button>
         </div>
 
@@ -196,17 +199,20 @@
 
         <div class="step" id="step-4">
             <h2>Memories 📸</h2>
-            <img src="rohit.jpg" class="memory-img" alt="Rohit" onerror="this.src='https://placehold.co/300x533/pink/white?text=Image+Missing'">
+            <img src="rohit.jpg" class="memory-img" alt="Rohit" onerror="this.src='https://placehold.co/300x500/pink/white?text=Image+Missing'">
             <p>Ab isko maaf krdo please, isko dekho kitna bhole maan se dekh rha h...</p>
             <button class="btn" onclick="nextStep(5)">Chalo maaf kiya?</button>
         </div>
 
         <div class="step" id="step-5">
             <h2>My Promise ✋</h2>
-            <p style="font-size: 1.2rem; font-weight: bold; color: #d63384; margin: 40px 0;">
-                "Please maaf krdo yeah promise h mera aab. Nhi hogi misunderstanding."
-            </p>
-            <button class="btn" onclick="nextStep(6)">Last Surprise ></button>
+            <div style="border: 2px dashed #d63384; padding: 20px; border-radius: 15px; background: #fff;">
+                <p style="font-size: 1.1rem; font-weight: bold; color: #d63384; margin: 0;">
+                    "Please maaf krdo yeah promise h mera aab. Nhi hogi misunderstanding."
+                </p>
+            </div>
+            <br>
+            <button class="btn" onclick="nextStep(6)">Final Surprise ✨</button>
         </div>
 
         <div class="step" id="step-6">
@@ -241,13 +247,17 @@
             // Hide all steps
             document.querySelectorAll('.step').forEach(step => {
                 step.classList.remove('active');
+                step.style.display = "none"; // Force hide
             });
             
             // Show requested step
             const currentStep = document.getElementById('step-' + stepNumber);
-            currentStep.classList.add('active');
+            if(currentStep) {
+                currentStep.style.display = "block"; // Force show
+                setTimeout(() => currentStep.classList.add('active'), 10); // Trigger fade in
+            }
 
-            // Trigger animations based on step
+            // Trigger specific animations
             if (stepNumber === 3) {
                 startTyping();
             }
@@ -285,11 +295,12 @@
             type();
         }
 
-        // Step 6: Unlock Secret
+        // Step 6: Unlock Secret (Updated Text)
         function unlockSecret() {
             const secretDiv = document.getElementById('secret-msg');
             if (!secretDiv.classList.contains('revealed')) {
-                secretDiv.innerText = "Madam 🫶🏻\n\nTumne maaf krdiya toh thankyou paaji aur shukriya ❤️";
+                // CHANGED TEXT HERE
+                secretDiv.innerHTML = "Madam 🫶🏻<br><br>Tumne maaf krdiya toh thankyou paaji aur shukriya ❤️";
                 secretDiv.classList.add('revealed');
             }
         }
